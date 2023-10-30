@@ -10,7 +10,7 @@ function Auth({register}) {
         <div className='container w-75'>
           <Link to={'/'} ><h5><i className='fa-solid fa-arrow-left'>  Back to Home</i></h5></Link>
 
-          <div className="card shadow p-5 bg-success">
+          <div className="card shadow p-5 bg-info">
             <div className="row align-items-center">
                 <div className='col-lg-6'>
                     <img src="https://img.freepik.com/free-vector/mobile-login-concept-illustration_114360-135.jpg?w=740&t=st=1698328298~exp=1698328898~hmac=dbbe7d6c0a80c3f013cc2fb8c954faa90fa219cf1a7275003b0e8593b7121ab7" alt="" className='rounded-start w-100' />
