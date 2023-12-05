@@ -1,10 +1,80 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Form } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Button from 'react-bootstrap/Button';
+import { loginAPI, registerAPI } from '../services/allApis';
 
 function Auth({register}) {
     const registerForm = register ? true:false
+    const [userData,setuserData]=useState({
+      username:"",email:"",password:""
+
+    })
+    const navigate=useNavigate()
+    
+    const handleRegister = async(e)=>{
+      e.preventDefault()
+      const {username,email,password} = userData
+
+      if(!username || !email || !password){
+        alert("please fill the form")
+
+      }
+      else{
+        // api call
+        const res=await registerAPI(userData)
+        console.log(res);
+        if(res.status===200){
+       alert(`${res.data.username} has successfully register...`);
+      //  reset state
+      setuserData({
+        username:"",email:"",password:""
+      })
+      navigate('/login')
+    }
+        else{
+          alert(res.response.data);
+        }
+        
+      }
+    }
+
+
+    const handleLogin = async(e)=>{
+      e.preventDefault()
+      const {email,password} = userData
+
+      if(!email || !password){
+        alert("please fill the form")
+
+      }
+      else{
+        // api call
+        const res=await loginAPI({email,password})
+        console.log(res);
+        if(res.status===200){
+
+          localStorage.setItem("existingUser",JSON.stringify(res.data.existingUser))
+          localStorage.setItem("Role",res.data.role)
+          sessionStorage.setItem("token",res.data.token)
+
+          
+      //  reset state
+      setuserData({
+        email:"",password:""
+      })
+      navigate('/')
+    }
+        else{
+          alert(res.response.data);
+        }
+        
+      }
+    }
+
+    
+
+
   return (
     <div style={{width:'100%',height:'100vh'}} className='d-flex justify-content-center align-items-center'>
         <div className='container w-75'>
@@ -29,27 +99,27 @@ function Auth({register}) {
                         </h5>
                         <Form className='text-light w-100'>
                        { registerForm &&
-                       <Form.Group className="mb-3" controlId="formBasicUsername">
-                        {/* <Form.Label>Username</Form.Label> */}
-                       <Form.Control type="text" placeholder="Enter your name" />
+                       <Form.Group className="mb-3" controlId="formBasicUsername" >
+                      
+                       <Form.Control type="text" placeholder="Enter your name" value={userData.username} onChange={(e)=>setuserData({...userData,username:e.target.value})}/>
                        </Form.Group>}
                        <Form.Group className="mb-3" controlId="formBasicEmail">
-                        {/* <Form.Label>Username</Form.Label> */}
-                       <Form.Control type="email" placeholder="Enter your Email" />
+                      
+                       <Form.Control type="email" placeholder="Enter your Email" value={userData.email} onChange={(e)=>setuserData({...userData,email:e.target.value})}/>
                        </Form.Group>
 
                        <Form.Group className="mb-3" controlId="formBasicpass">
-                        {/* <Form.Label>Username</Form.Label> */}
-                       <Form.Control type="password" placeholder="Enter Password" />
+                
+                       <Form.Control type="password" placeholder="Enter Password" value={userData.password} onChange={(e)=>setuserData({...userData,password:e.target.value})} />
                        </Form.Group>
                       {
                         registerForm ?
-                        <div><Button variant='danger' type='submit' size='lg' className=''>Register</Button>
+                        <div><Button variant='danger' type='submit' size='lg' className='' onClick={handleRegister}>Register</Button>
                         <p className='mt-3 text-light'>Already have an account ? <Link className='btn-link text-dark' to={'/login'}>Login Here</Link></p>
                         </div>
 
                         :
-                        <div><Button variant='danger' type='submit' size='lg' className=''>Login</Button>
+                        <div><Button variant='danger' type='submit' size='lg' onClick={handleLogin} className=''>Login</Button>
                         <p className='mt-3 text-light'>New User ? <Link className='btn-link text-dark' to={'/register'}>Register Here</Link></p>
                         </div>
                       }

@@ -1,18 +1,24 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import HeaderForDashb from '../Components/HeaderForDashb'
 import Profile from '../Components/Profile'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import AddProjects from '../Components/AddProjects';
+import Myprojects from '../Components/Myprojects';
 
 function Dashboard() {
-  
+  const[username,setUsername]=useState("")
+  useEffect(()=>{
+    if(localStorage.getItem("existingUser")){
+      setUsername(JSON.parse(localStorage.getItem("existingUser")).username)
+    }
+  },[])
   return (
     <>
      <HeaderForDashb className='mb-5'/>
 
     <div>
-    <h2 className='ms-5' style={{marginTop:'100px'}}>Welcome User</h2>
+    <h2 className='ms-5' style={{marginTop:'100px'}}>Welcome <span className='text-danger'>{username}</span></h2>
     </div>
 
     <div className='row mt-5'>
@@ -24,26 +30,19 @@ function Dashboard() {
         </div>
         
        
-        <div className='d-flex mt-5 justify-content-between border align-items-center p-1 rounded text-center mt-4 mb-4'>
-        <h4>Project Title </h4>
-        <div className='d-flex'  >
-        <button className='btn'><i class="fa-regular fa-pen-to-square text-danger  "></i></button>
-        <button className='btn'><i className='fa-solid fa-trash text-danger '></i></button> 
-        <button className='btn'><i className='fa-brands fa-github text-danger'></i></button> 
-        </div>
-        </div>
+       <Myprojects/>
          
 
-        <div className='mt-5 ms-3'>
-          <p className='text-danger fw-bolder'>No Projects Found</p>
-        </div>
+        
 
-
+        {/* <div className='w-100 d-flex justify-content-center align-items-center mt-5' style={{height:'100%'}}>
+          <Myprojects/>
+        </div> */}
 
          
       </div>
       
-      <div className='col-lg-1'></div>
+      <div className='col-lg-1 '></div>
 
 
       {/* profile */}
@@ -56,6 +55,8 @@ function Dashboard() {
 
       <div className='col-lg-1'></div>
     </div>
+
+    
 
     </>
   )

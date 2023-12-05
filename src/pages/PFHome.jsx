@@ -1,9 +1,35 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {Col, Row } from 'react-bootstrap'
 import HomeProjects from '../Components/HomeProjects'
 import { Link } from 'react-router-dom'
+import { homeProjectsApi } from '../services/allApis'
 function PFHome() {
   const [isLoggedIn,setLoggedIn]=useState(false)
+ const[allprojects,setallprojects]=useState([])
+ const getHomeProjects=async()=>{
+  const result =await homeProjectsApi()
+  if(result.status===200){
+    setallprojects(result.data)
+    // console.log(allprojects);
+  }
+  // else{
+  //   alert(result.response.data)
+  // }
+ }
+  useEffect(()=>{
+    if(localStorage.getItem("existingUser")){
+      setLoggedIn(true)
+      
+    }
+    else{
+      setLoggedIn(false)
+    }
+    
+  },[])
+
+  useEffect(()=>{
+    getHomeProjects()
+  },[])
   return (
     <>
      {/* landing section */}
@@ -33,9 +59,10 @@ function PFHome() {
 
 
     {/* glimpse of all projects */}
-    <div className="all-projects mt-5">
-        <HomeProjects />
-    </div>
+    {allprojects&&
+      <div className="all-projects mt-5">
+        <HomeProjects allprojects={allprojects}/>
+    </div>}
     
     </>
   )

@@ -1,9 +1,17 @@
 import React from 'react'
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-function HeaderForDashb() {
+function HeaderForDashb({insideDashboard}) {
+  const navigate=useNavigate()
+  const handlelogout=()=>{
+    sessionStorage.removeItem("token")
+    localStorage.removeItem("existingUser")
+    localStorage.removeItem("Role")
+    navigate('/')
+  }
+
   return (
     <Navbar className="bg-info w-100 position-fixed top-0" style={{zIndex:'1'}}>
     <Container>
@@ -22,7 +30,7 @@ function HeaderForDashb() {
       </Navbar.Brand>
       <Navbar.Collapse className="justify-content-end">
           <Navbar.Text>
-            <Link ><span>Log Out</span> <i className='fa-solid fa-right-from-bracket ms-2'></i></Link>
+            <Link onClick={handlelogout}><span>Log Out</span> <i className='fa-solid fa-right-from-bracket ms-2'></i></Link>
           </Navbar.Text>
         </Navbar.Collapse>
     </Container>
